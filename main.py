@@ -3,6 +3,7 @@ fake = Faker()
 
 contacts_list = []
 
+
 class BaseContact:
     
     def __init__(self, index, first_name, last_name, mobile_number, email_address):
@@ -22,7 +23,7 @@ class BaseContact:
         if value <= self.label_length:
             self.label_length = value
         else:
-            raise ValueError(f"Value {value} exceeds label_length of {self.label_length}")
+            raise ValueError(f"Value {value} exceeds label_length {self.label_length}")
        
     def __str__(self):
         return ("Private contact\n"
@@ -32,7 +33,8 @@ class BaseContact:
                 f"Email address: {self.email_address}\n")
        
     def __repr__(self):
-        return (f"Index: {self.index}\n"
+        return ("Private contact\n"
+                f"Index: {self.index}\n"
                 f"First name: {self.first_name}\n"
                 f"Last name: {self.last_name}\n"
                 f"Mobile number: {self.mobile_number}\n"
@@ -49,9 +51,7 @@ class BaseContact:
         
     def contact(self):
         print(f"Kontaktuję się z {self.first_name} {self.last_name}\n"
-              f"Tel prywatny: {self.mobile_number}\n")
-    
-    
+              f"Tel PRYWATNY: {self.mobile_number}\n")
     
     
 class BusinessContact(BaseContact):
@@ -71,69 +71,56 @@ class BusinessContact(BaseContact):
                 f"Email address: {self.email_address}\n")
        
     def __repr__(self):
-        return (f"Index: {self.index}\n"
+        return ("Bussiness contact\n"
+                f"Index: {self.index}\n"
                 f"First name: {self.first_name}\n"
                 f"Last name: {self.last_name}\n"
                 f"Job title: {self.job_title}\n"
                 f"Comapny name: {self.company_name}\n"
-                f"Mobile number: {self.mobile_number}\n"
+                f"Private number: {self.mobile_number}\n"
                 f"Work number: {self.work_phone}\n"
                 f"Email address: {self.email_address}\n"
                 f"Full name length: {self.label_length}\n")
         
     def contact(self):
         print(f"Kontaktuję się z {self.first_name} {self.last_name}\n"
-              f"Tel służbowy: {self.work_phone}\n")
+              f"Tel SŁUŻBOWY: {self.work_phone}\n")
 
 
+def create_contacts(array, contact_type='private', how_many=1):
+    if contact_type != 'private' and contact_type != 'bussiness':
+        print("Error. Wrong contact type. Only private or bussiness.")
+        return False
+    for index in range(0, how_many):
+        array.append(create_fake_base_contact_instance(index) if contact_type == 'private' 
+                     else create_fake_bussiness_contact_instance(index))    
 
-
-def create_contacts(contact_type='private', how_many=1):
-    if contact_type == 'private':
-        create_multiple_base_contact_instances(contacts_list, how_many)
-    elif contact_type == 'bussiness':
-        create_multiple_bussiness_contact_instances(contacts_list, how_many)
-    else:
-        print("Error. Wrong contant type.")
-       
 def create_fake_bussiness_contact_instance(index_in_array):
     return BusinessContact(
-                  fake.job(),
-                  fake.company(),
-                  fake.phone_number(),
-                  index_in_array,
-                  fake.first_name(),
-                  fake.last_name(),
-                  fake.phone_number(),
-                  fake.email(),
-                  )
+        fake.job(),
+        fake.company(),
+        fake.phone_number(),
+        index_in_array,
+        fake.first_name(),
+        fake.last_name(),
+        fake.phone_number(),
+        fake.email(),
+        )
     
 def create_fake_base_contact_instance(index_in_array):
-    return BaseContact(index_in_array,
-                  fake.first_name(),
-                  fake.last_name(),
-                  fake.phone_number(),
-                  fake.email(),)
-    
-def create_multiple_base_contact_instances(array, how_many=1):
-    for index in range(0, how_many):
-        array.append(create_fake_base_contact_instance(index))
-        
-def create_multiple_bussiness_contact_instances(array, how_many=1):
-    for index in range(0, how_many):
-        array.append(create_fake_bussiness_contact_instance(index))
+    return BaseContact(
+        index_in_array,
+        fake.first_name(),
+        fake.last_name(),
+        fake.phone_number(),
+        fake.email(),
+        )
         
 def show_persons_in_array(array):
     for person in array:
         print(person)
         
         
-        
-create_contacts('private', 512)
-create_contacts('bussiness', 128)
+create_contacts(contacts_list, 'private', 512)
+create_contacts(contacts_list, 'bussiness', 128)
 show_persons_in_array(contacts_list)
-
-by_first_name = sorted(contacts_list, key=lambda person: person.first_name)
-by_last_name = sorted(contacts_list, key=lambda person: person.last_name)
-by_email_address = sorted(contacts_list, key=lambda person: person.email_address)
-by_mobile_number = sorted(contacts_list, key=lambda person: person.mobile_number)
