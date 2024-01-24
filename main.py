@@ -20,14 +20,16 @@ def create_contacts(contact_type='private', how_many=1):
     if contact_type == 'private' or contact_type == 'bussiness':
         array = []
         for index in range(0, how_many):
-            array.append(
-                create_fake_base_contact_instance(index) if contact_type == 'private' 
-                else create_fake_bussiness_contact_instance(index)
-                )    
+            array.append(create_new_contact(index, contact_type))    
         return array
     else:
         print("Error. Wrong contact type. Only private or bussiness.")
         return False
+    
+def create_new_contact(index, contact_type):
+    if contact_type == 'private':
+        return create_fake_base_contact_instance(index)
+    return create_fake_bussiness_contact_instance(index)
 
 def create_fake_bussiness_contact_instance(index_in_array):
     return BusinessContact(
